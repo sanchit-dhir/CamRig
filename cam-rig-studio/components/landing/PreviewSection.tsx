@@ -126,32 +126,7 @@ export const PreviewSection = () => {
              </div>
           </TiltCard>
 
-        </div>
-
-        {/* Trust Banner / Bottom section like the screenshot */}
-        <div className="trust-banner pt-12 text-center w-full mt-auto">
-          <p className="text-slate-400 font-medium mb-8 text-sm md:text-base">
-            We're helping the best teams create
-          </p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-            {/* Logos placeholder imitating Nexon / Square Enix */}
-            <div className="flex items-center gap-2 translate-y-2">
-              <div className="w-6 h-6 border-2 border-white rounded-[4px] rotate-45"></div>
-              <span className="font-heading font-black text-xl italic tracking-tighter text-white">NEXON</span>
-            </div>
-            <div className="flex items-center -translate-y-2">
-              <span className="font-heading font-bold text-lg tracking-widest text-white">SQUARE ENIX</span>
-            </div>
-            <div className="flex items-center gap-2 translate-y-2">
-              <div className="w-6 h-6 border-2 border-white rounded-[4px] rotate-45"></div>
-              <span className="font-heading font-black text-xl italic tracking-tighter text-white">NEXON</span>
-            </div>
-            <div className="flex items-center -translate-y-2">
-              <span className="font-heading font-bold text-lg tracking-widest text-white">SONY</span>
-            </div>
-          </div>
-        </div>
-        
+        </div>       
       </div>
     </section>
   )
