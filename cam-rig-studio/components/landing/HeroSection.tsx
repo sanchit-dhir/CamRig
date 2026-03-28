@@ -1,10 +1,11 @@
 'use client';
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Environment, Float, RoundedBox, Stars, MeshTransmissionMaterial } from '@react-three/drei'
 import * as THREE from 'three'
 import gsap from 'gsap'
 import { MagneticButton } from '../ui/MagicButton'
+import Link from 'next/link'
 
 const CharacterPlaceholder = () => {
     const headRef = useRef<THREE.Group>(null)
@@ -69,7 +70,11 @@ const CharacterPlaceholder = () => {
 }
 
 export const HeroSection = () => {
+  const [eventSource, setEventSource] = useState<HTMLElement | null>(null);
+
   useEffect(() => {
+    setEventSource(document.body);
+    
     gsap.fromTo('.hero-anim', 
       { y: 50, opacity: 0 },
       { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: "power3.out", delay: 0.2 }
@@ -77,9 +82,13 @@ export const HeroSection = () => {
   }, [])
 
   return (
-    <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
+    <section id="home" className="relative min-h-screen flex items-center pt-20 overflow-hidden">
       <div className="absolute inset-0 z-0 opacity-80 pointer-events-none">
-         <Canvas camera={{ position: [0, 0, 8], fov: 45 }} className="w-full h-full">
+         <Canvas 
+           camera={{ position: [0, 0, 8], fov: 45 }} 
+           className="w-full h-full"
+           eventSource={eventSource || undefined}
+         >
            <ambientLight intensity={0.7} />
            <directionalLight position={[5, 10, 5]} intensity={2} color="#22D3EE" />
            <pointLight position={[-5, -5, -5]} intensity={2} color="#6366F1" />
@@ -106,20 +115,22 @@ export const HeroSection = () => {
             Instantly convert your videos into animated avatars and go live like never before. Welcome to the future of animation in deep space.
           </p>
           
-          <div className="hero-anim flex flex-col sm:flex-row gap-5 mt-4 w-full sm:w-auto z-20">
+          <div className="hero-anim flex flex-col sm:flex-row gap-5 mt-4 w-full sm:w-auto z-50 relative">
              <MagneticButton>
-              <a href='http://localhost:3000/studio'>
-               <button className="px-8 py-4 w-full rounded-xl bg-indigo-600 text-white font-semibold shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:bg-indigo-500 hover:shadow-[0_0_30px_rgba(34,211,238,0.7)] transition-all duration-300 transform hover:-translate-y-1 relative group overflow-hidden">
-                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>
-                 <span className="relative z-10 pointer-events-none">Open Studio</span>
-               </button>
-               </a>
+              <Link href='/studio' className="w-full pointer-events-auto">
+                <button className="px-8 py-4 w-full rounded-xl bg-indigo-600 text-white font-semibold shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:bg-indigo-500 hover:shadow-[0_0_30px_rgba(34,211,238,0.7)] transition-all duration-300 transform hover:-translate-y-1 relative group overflow-hidden cursor-pointer pointer-events-auto">
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>
+                  <span className="relative z-10 pointer-events-none">Open Studio</span>
+                </button>
+              </Link>
              </MagneticButton>
              
              <MagneticButton>
-               <button className="px-8 py-4 w-full rounded-xl bg-slate-800/80 backdrop-blur-md font-semibold border border-slate-700 hover:border-indigo-400/80 hover:bg-slate-700/80 transition-all duration-300 shadow-lg pointer-events-auto">
-                 Contribute GitHub
-               </button>
+               <a href="https://github.com/sanchit-dhir/CamRig" target="_blank" rel="noopener noreferrer" className="w-full pointer-events-auto">
+                 <button className="px-8 py-4 w-full rounded-xl bg-slate-800/80 backdrop-blur-md font-semibold border border-slate-700 hover:border-indigo-400/80 hover:bg-slate-700/80 transition-all duration-300 shadow-lg cursor-pointer pointer-events-auto">
+                   Contribute GitHub
+                 </button>
+               </a>
              </MagneticButton>
           </div>
         </div>

@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useEffect } from 'react'
 import gsap from 'gsap'
+import Link from 'next/link'
 
 export const Navbar = () => {
   const blobRef = useRef<HTMLDivElement>(null)
@@ -71,10 +72,15 @@ export const Navbar = () => {
 
           {/* Desktop Menu */}
           <ul className="hidden md:flex items-center gap-8 font-medium text-sm text-slate-300">
-            {['Home', 'Studio', 'Templates', 'How it Works'].map((item) => (
-              <li key={item}>
-                <a href="#" className="relative group px-1 py-2 hover:text-white transition-colors duration-300 block">
-                  {item}
+            {[
+              { label: 'Home', href: '#home' },
+              { label: 'Templates', href: '#templates' },
+              { label: 'Use Cases', href: '#use-cases' },
+              { label: 'How it Works', href: '#how-it-works' },
+            ].map((item) => (
+              <li key={item.label}>
+                <a href={item.href} className="relative group px-1 py-2 hover:text-white transition-colors duration-300 block">
+                  {item.label}
                   <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-cyan-400 rounded-full transition-all duration-300 group-hover:w-full shadow-[0_0_10px_rgba(34,211,238,0.8)]"></span>
                 </a>
               </li>
@@ -83,10 +89,12 @@ export const Navbar = () => {
 
           {/* CTA Right */}
           <div className="flex items-center">
-             <a href='http://localhost:3000/studio'><button className="relative px-5 py-2 text-sm font-semibold text-white rounded-lg bg-indigo-600/80 border border-indigo-400/50 shadow-[0_0_15px_rgba(99,102,241,0.4)] hover:bg-indigo-500 hover:shadow-[0_0_25px_rgba(34,211,238,0.6)] transition-all duration-300 overflow-hidden group">
-               <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/0 via-cyan-400/30 to-cyan-400/0 -translate-x-[150%] skew-x-[-20deg] group-hover:animate-[shimmer_1.5s_infinite]"></div>
-               <span className="relative z-10">Open Studio</span>
-             </button></a>
+             <Link href='/studio'>
+               <button className="relative px-5 py-2 text-sm font-semibold text-white rounded-lg bg-indigo-600/80 border border-indigo-400/50 shadow-[0_0_15px_rgba(99,102,241,0.4)] hover:bg-indigo-500 hover:shadow-[0_0_25px_rgba(34,211,238,0.6)] transition-all duration-300 overflow-hidden group">
+                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/0 via-cyan-400/30 to-cyan-400/0 -translate-x-[150%] skew-x-[-20deg] group-hover:animate-[shimmer_1.5s_infinite]"></div>
+                 <span className="relative z-10">Open Studio</span>
+               </button>
+             </Link>
              {/* Mobile Menu Icon (Placeholder) */}
              <button className="md:hidden ml-4 text-slate-300 hover:text-white">
                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>

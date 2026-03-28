@@ -67,7 +67,7 @@ export const ProcessSection = () => {
   ]
 
   return (
-    <section ref={sectionRef} className="py-32 relative bg-[#0B1120] overflow-hidden">
+    <section id="how-it-works" ref={sectionRef} className="py-32 relative bg-[#0B1120] overflow-hidden">
       <div className="container mx-auto px-6 max-w-5xl relative z-10">
         
         <div className="text-center mb-20 animate-float">

@@ -44,7 +44,7 @@ export const InteractiveAnimationSection = () => {
   }, [])
 
   return (
-    <section ref={containerRef} className="relative h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-[#0a0f1d] border-t border-slate-800/50">
+    <section id="use-cases" ref={containerRef} className="relative h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-[#0a0f1d] border-t border-slate-800/50">
       
       {/* 3D Canvas Background */}
       <div className="absolute inset-0 z-0 parallax-bg opacity-70">
@@ -64,23 +64,29 @@ export const InteractiveAnimationSection = () => {
       </div>
 
       <div className="relative z-10 text-center max-w-3xl px-6 glass-card p-12 rounded-3xl border border-indigo-500/20 backdrop-blur-xl shadow-[0_0_50px_rgba(99,102,241,0.15)] transition-all hover:shadow-[0_0_80px_rgba(34,211,238,0.25)] hover:border-cyan-500/30">
+        <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-indigo-900/30 border border-indigo-500/20 text-sm font-medium text-cyan-200 tracking-wide">
+          For game devs, indie creators, animation students, and studios
+        </div>
         <h2 className="text-4xl md:text-6xl font-heading font-black mb-6 text-white drop-shadow-xl">
-          Ready to join the <br className="hidden md:block"/>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500 neon-glow">Crew?</span>
+          Built for creators who ship
+          <br className="hidden md:block" />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500 neon-glow">from concept to motion</span>
         </h2>
         <p className="text-xl text-slate-300 mb-8 max-w-xl mx-auto">
-          Sign up early to get your personalized CamRig suit and start animating today.
+          Whether you're an indie game developer, animation student, or creative studio, CamRig helps you turn real performance into animated characters faster.
         </p>
         
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <input 
-            type="email" 
-            placeholder="Enter your email" 
-            className="px-6 py-4 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-200 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-medium md:min-w-[300px] transition-all"
-          />
-          <button className="px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 text-white font-bold shadow-[0_0_20px_rgba(34,211,238,0.4)] hover:shadow-[0_0_40px_rgba(34,211,238,0.6)] transition-all duration-300 transform hover:-translate-y-1">
-            Request Access
-          </button>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left mb-8">
+          {[
+            'Game Dev',
+            'Indie Creators',
+            'Animation Students'
+          ].map((item) => (
+            <div key={item} className="rounded-2xl border border-slate-700/60 bg-slate-950/70 p-4 text-sm text-slate-200">
+              <div className="font-semibold text-white">{item}</div>
+              <div className="text-slate-400 text-xs mt-2">Fast rigging, real-time preview, and polished export workflows.</div>
+            </div>
+          ))}
         </div>
       </div>
 

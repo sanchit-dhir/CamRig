@@ -235,9 +235,20 @@ const RippleSystem = () => {
 }
 
 export const CursorEffects = () => {
+  const [eventSource, setEventSource] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    setEventSource(document.body);
+  }, []);
+
   return (
-    <div className="fixed inset-0 z-[100] pointer-events-none w-full h-full">
-        <Canvas camera={{ position: [0, 0, 5], fov: 50 }} dpr={[1, 2]} gl={{ powerPreference: "high-performance" }}>
+    <div className="fixed inset-0 z-[100] pointer-events-none w-full h-full select-none">
+        <Canvas 
+          camera={{ position: [0, 0, 5], fov: 50 }} 
+          dpr={[1, 2]} 
+          gl={{ powerPreference: "high-performance" }}
+          eventSource={eventSource || undefined}
+        >
             <ParticleSystem />
             <EnergyTrail />
             <RippleSystem />
