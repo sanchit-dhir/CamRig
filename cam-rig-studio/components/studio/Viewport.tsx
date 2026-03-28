@@ -7,6 +7,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFExporter } from "three-stdlib";
 import { loadAvatar } from "../../lib/avatarLoader";
 import type { CapturedMocap, PoseFrame } from "../../lib/mocapEngine";
+import type { StudioThemeId } from "./StudioThemeContext";
 
 export interface ViewportHandle {
   exportGLB: (filename: string) => Promise<void>;
@@ -17,6 +18,7 @@ interface ViewportProps {
   animationUrl: string;
   customAnimClip?: CapturedMocap | null;
   onTimeUpdate?: (time: number) => void;
+  theme?: StudioThemeId;
 }
 
 const SPEED_OPTIONS = [0.25, 0.5, 1, 2] as const;
@@ -27,6 +29,7 @@ const Viewport = forwardRef<ViewportHandle, ViewportProps>(({
   animationUrl,
   customAnimClip,
   onTimeUpdate,
+  theme: _theme = "dark-ai",
 }, ref) => {
   const mountRef = useRef<HTMLDivElement>(null);
 
@@ -51,7 +54,6 @@ const Viewport = forwardRef<ViewportHandle, ViewportProps>(({
 
   const progressRef = useRef<HTMLInputElement>(null);
   const timeDisplayRef = useRef<HTMLSpanElement>(null);
-  const fpsRef = useRef<HTMLSpanElement>(null);
   const isPlayingRef = useRef(true);
   const speedRef = useRef<number>(1);
   const loopRef = useRef(true);
@@ -64,13 +66,14 @@ const Viewport = forwardRef<ViewportHandle, ViewportProps>(({
   useEffect(() => {
     const mount = mountRef.current!;
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color("#050505");
+    scene.background = null;
     sceneRef.current = scene;
 
     const camera = new THREE.PerspectiveCamera(45, mount.clientWidth / mount.clientHeight, 0.1, 100);
     camera.position.set(0, 2, 5);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setClearColor(0x000000, 0);
     renderer.setSize(mount.clientWidth, mount.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     mount.appendChild(renderer.domElement);
@@ -136,7 +139,6 @@ const Viewport = forwardRef<ViewportHandle, ViewportProps>(({
       fpsUpdateTimer += rawDelta;
       if (fpsUpdateTimer >= 1) {
         const fps = Math.round(fpsFrames * 1000 / (nowPerf - prevFpsTime));
-        if (fpsRef.current) fpsRef.current.innerText = `${fps}`;
         setRendererFps(fps);
         fpsFrames = 0;
         prevFpsTime = nowPerf;
@@ -402,7 +404,12 @@ const Viewport = forwardRef<ViewportHandle, ViewportProps>(({
   };
 
   // FPS colour indicator
-  const fpsColor = rendererFps >= 50 ? "text-green-400" : rendererFps >= 30 ? "text-yellow-400" : "text-red-400";
+  const fpsColor =
+    rendererFps >= 50
+      ? "text-emerald-400"
+      : rendererFps >= 30
+        ? "text-amber-300"
+        : "text-rose-400";
   const mocapFps = mocapRef.current?.fps ?? null;
 
   // ── 5. EXPORT GLB ──────────────────────────────────────────────────────────────
@@ -500,46 +507,50 @@ const Viewport = forwardRef<ViewportHandle, ViewportProps>(({
 
   // ── 6. RENDER ────────────────────────────────────────────────────────────────
   return (
-    <div className="relative w-full h-full font-mono text-cyan-400 select-none bg-[#050505]">
-      <div className="w-full h-full outline-none" ref={mountRef} />
+    <div className="relative h-full w-full select-none bg-transparent font-sans text-[var(--studio-text)]">
+      <div className="h-full w-full outline-none" ref={mountRef} />
 
       {/* ── HUD ─────────────────────────────────────────────────────────────── */}
-      <div className="absolute top-4 left-4 border border-cyan-500/30 bg-black/70 backdrop-blur-sm p-3 rounded-md shadow-[0_0_15px_rgba(0,255,255,0.15)] pointer-events-none min-w-[160px]">
-        <div className="text-[9px] tracking-widest text-cyan-700 mb-2 border-b border-cyan-900/40 pb-1">ViewPort</div>
-        <div className="flex flex-col gap-1 text-[11px]">
+      <div className="pointer-events-none absolute left-4 top-4 min-w-[168px] rounded-xl border border-[var(--studio-border)] p-3 text-[11px] shadow-[var(--studio-shadow-elev)] studio-glass">
+        <div className="mb-2 border-b border-[var(--studio-border)] pb-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-[var(--studio-muted)]">
+          Viewport telemetry
+        </div>
+        <div className="flex flex-col gap-1">
           <div className="flex justify-between gap-4">
-            <span className="text-cyan-700">RENDER</span>
-            <span ref={fpsRef} className={`font-bold ${fpsColor}`}>-- FPS</span>
+            <span className="text-[var(--studio-muted)]">Render</span>
+            <span className={`font-bold tabular-nums ${fpsColor}`}>
+              {rendererFps > 0 ? rendererFps : "—"} FPS
+            </span>
           </div>
           {isMocapRef.current && mocapFps !== null && (
             <div className="flex justify-between gap-4">
-              <span className="text-cyan-700">MOCAP</span>
-              <span className="text-cyan-300 font-bold">{mocapFps} FPS</span>
+              <span className="text-[var(--studio-muted)]">Mocap</span>
+              <span className="font-bold tabular-nums text-[var(--studio-highlight)]">{mocapFps} FPS</span>
             </div>
           )}
           <div className="flex justify-between gap-4">
-            <span className="text-cyan-700">SPEED</span>
-            <span className="text-purple-400 font-bold">{speed}×</span>
+            <span className="text-[var(--studio-muted)]">Speed</span>
+            <span className="font-bold text-[color-mix(in_oklab,var(--studio-accent)_75%,white)]">{speed}×</span>
           </div>
-          <div className="flex justify-between gap-4 mt-1 pt-1 border-t border-cyan-900/30">
-            <span className="text-cyan-700">CHAR</span>
-            <span className="text-cyan-500 truncate max-w-[80px]">{avatarUrl.split("/").pop()}</span>
+          <div className="mt-1 flex justify-between gap-4 border-t border-[var(--studio-border)] pt-1">
+            <span className="text-[var(--studio-muted)]">Rig</span>
+            <span className="max-w-[92px] truncate text-[var(--studio-accent)]">{avatarUrl.split("/").pop()}</span>
           </div>
           <div className="flex justify-between gap-4">
-            <span className="text-cyan-700">MODE</span>
-            <span className={isMocapRef.current ? "text-cyan-300 animate-pulse" : "text-cyan-700"}>
-              {isMocapRef.current ? "MOCAP" : "ANIM"}
+            <span className="text-[var(--studio-muted)]">Mode</span>
+            <span className={isMocapRef.current ? "animate-pulse text-[var(--studio-highlight)]" : "text-[var(--studio-muted)]"}>
+              {isMocapRef.current ? "Neural" : "Clip"}
             </span>
           </div>
         </div>
       </div>
 
       {/* ── PLAYER CONTROLS ──────────────────────────────────────────────────── */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-11/12 max-w-3xl bg-black/85 backdrop-blur-md border border-cyan-500/40 rounded-xl p-4 shadow-[0_0_25px_rgba(0,255,255,0.18)] flex flex-col gap-3">
+      <div className="absolute bottom-6 left-1/2 flex w-11/12 max-w-3xl -translate-x-1/2 flex-col gap-3 rounded-2xl border border-[var(--studio-border)] p-4 shadow-[var(--studio-shadow-elev)] studio-glass transition-[box-shadow] duration-300 hover:shadow-[var(--studio-glow-soft)]">
 
         {/* Progress bar row */}
         <div className="flex items-center gap-3">
-          <span className="text-[10px] text-cyan-700 w-10 text-right">
+          <span className="w-10 text-right text-[10px] text-[var(--studio-muted)] tabular-nums">
             <span ref={timeDisplayRef}>0.00</span>s
           </span>
           <input
@@ -550,9 +561,9 @@ const Viewport = forwardRef<ViewportHandle, ViewportProps>(({
             step="0.01"
             defaultValue="0"
             onChange={handleSeek}
-            className="flex-1 h-1 bg-cyan-950 rounded-lg appearance-none cursor-crosshair accent-cyan-400 hover:h-2 transition-all outline-none"
+            className="studio-range flex-1"
           />
-          <span className="text-[10px] text-cyan-700 w-10">{duration.toFixed(2)}s</span>
+          <span className="w-10 text-[10px] text-[var(--studio-muted)] tabular-nums">{duration.toFixed(2)}s</span>
         </div>
 
         {/* Controls row */}
@@ -560,8 +571,9 @@ const Viewport = forwardRef<ViewportHandle, ViewportProps>(({
           {/* Transport */}
           <div className="flex items-center gap-1.5">
             <button
+              type="button"
               onClick={() => stepFrame(-1)}
-              className="p-2 border border-cyan-800/60 rounded-lg hover:bg-cyan-900/50 hover:border-cyan-400 transition-all text-cyan-500 flex items-center"
+              className="flex items-center rounded-xl border border-[var(--studio-border)] p-2 text-[var(--studio-accent)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--studio-border-strong)] hover:shadow-[var(--studio-glow-soft)]"
               title="Step back"
             >
               <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -570,8 +582,9 @@ const Viewport = forwardRef<ViewportHandle, ViewportProps>(({
             </button>
 
             <button
+              type="button"
               onClick={togglePlay}
-              className="w-11 h-9 border border-cyan-500/60 rounded-lg bg-cyan-950/60 hover:bg-cyan-900 hover:shadow-[0_0_12px_rgba(0,255,255,0.5)] transition-all flex items-center justify-center text-cyan-300"
+              className="flex h-9 w-11 items-center justify-center rounded-xl border border-[var(--studio-border-strong)] bg-[color-mix(in_oklab,var(--studio-accent)_18%,transparent)] text-[var(--studio-text)] shadow-[var(--studio-glow-soft)] transition-all duration-300 hover:-translate-y-0.5"
               title="Play / Pause"
             >
               {isPlaying
@@ -580,8 +593,9 @@ const Viewport = forwardRef<ViewportHandle, ViewportProps>(({
             </button>
 
             <button
+              type="button"
               onClick={() => stepFrame(1)}
-              className="p-2 border border-cyan-800/60 rounded-lg hover:bg-cyan-900/50 hover:border-cyan-400 transition-all text-cyan-500 flex items-center"
+              className="flex items-center rounded-xl border border-[var(--studio-border)] p-2 text-[var(--studio-accent)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--studio-border-strong)] hover:shadow-[var(--studio-glow-soft)]"
               title="Step forward"
             >
               <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -591,19 +605,22 @@ const Viewport = forwardRef<ViewportHandle, ViewportProps>(({
           </div>
 
           {/* Divider */}
-          <div className="w-px h-6 bg-cyan-900/50" />
+          <div className="h-6 w-px bg-[var(--studio-border)]" />
 
           {/* Speed selector */}
           <div className="flex items-center gap-1">
-            <span className="text-[9px] text-cyan-700 tracking-wider mr-1">SPEED</span>
+            <span className="mr-1 text-[9px] font-semibold uppercase tracking-[0.14em] text-[var(--studio-muted)]">
+              Speed
+            </span>
             {SPEED_OPTIONS.map(s => (
               <button
                 key={s}
+                type="button"
                 onClick={() => setSpeed(s)}
-                className={`px-2 py-1 rounded text-[10px] font-bold tracking-wider border transition-all ${
+                className={`rounded-lg border px-2 py-1 text-[10px] font-bold tracking-wider transition-all duration-300 ${
                   speed === s
-                    ? "bg-purple-600 border-purple-400 text-white shadow-[0_0_8px_rgba(168,85,247,0.5)]"
-                    : "bg-black border-cyan-900/60 text-cyan-700 hover:border-purple-600 hover:text-purple-400"
+                    ? "border-[var(--studio-border-strong)] bg-[color-mix(in_oklab,var(--studio-accent)_25%,transparent)] text-[var(--studio-text)] shadow-[var(--studio-glow-soft)]"
+                    : "border-[var(--studio-border)] text-[var(--studio-muted)] hover:border-[var(--studio-border-strong)] hover:text-[var(--studio-text)]"
                 }`}
               >
                 {s}×
@@ -612,16 +629,17 @@ const Viewport = forwardRef<ViewportHandle, ViewportProps>(({
           </div>
 
           {/* Divider */}
-          <div className="w-px h-6 bg-cyan-900/50" />
+          <div className="h-6 w-px bg-[var(--studio-border)]" />
 
           {/* Loop toggle */}
           <button
+            type="button"
             onClick={() => setLoop(l => !l)}
             title={loop ? "Loop ON" : "Loop OFF"}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[10px] tracking-wider font-bold transition-all ${
+            className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] transition-all duration-300 ${
               loop
-                ? "border-cyan-500/60 text-cyan-400 bg-cyan-950/40 hover:bg-cyan-900/50"
-                : "border-cyan-900/40 text-cyan-800 bg-black hover:border-cyan-700"
+                ? "border-[var(--studio-border-strong)] bg-[color-mix(in_oklab,var(--studio-highlight)_12%,transparent)] text-[var(--studio-text)] shadow-[var(--studio-glow-soft)]"
+                : "border-[var(--studio-border)] text-[var(--studio-muted)] hover:border-[var(--studio-border-strong)]"
             }`}
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -631,10 +649,18 @@ const Viewport = forwardRef<ViewportHandle, ViewportProps>(({
           </button>
 
           {/* FPS badge (right-aligned) */}
-          <div className="ml-auto flex items-center gap-1 bg-black border border-cyan-900/50 rounded px-2 py-1">
-            <div className={`w-1.5 h-1.5 rounded-full ${rendererFps >= 50 ? "bg-green-400" : rendererFps >= 30 ? "bg-yellow-400" : "bg-red-400"} animate-pulse`} />
-            <span className={`text-[10px] font-bold ${fpsColor}`}>
-              <span ref={fpsRef}>--</span> FPS
+          <div className="ml-auto flex items-center gap-1.5 rounded-lg border border-[var(--studio-border)] bg-[color-mix(in_oklab,var(--studio-surface)_30%,transparent)] px-2 py-1">
+            <div
+              className={`h-1.5 w-1.5 animate-pulse rounded-full ${
+                rendererFps >= 50
+                  ? "bg-emerald-400"
+                  : rendererFps >= 30
+                    ? "bg-amber-300"
+                    : "bg-rose-400"
+              }`}
+            />
+            <span className={`text-[10px] font-bold tabular-nums ${fpsColor}`}>
+              {rendererFps > 0 ? rendererFps : "—"} FPS
             </span>
           </div>
         </div>
