@@ -7,7 +7,14 @@ export async function loadAvatar(url: string, animurl: string) {
   // LOAD FBX WITH SKIN
   const fbx = await fbxLoader.loadAsync(url);
   // LOAD ANIMATION (No Skin)
-  const anim = await fbxLoader.loadAsync(animurl);
+  let anim;
+  try {
+    anim = await fbxLoader.loadAsync(animurl);
+  } catch (e) {
+    console.warn("Animation load failed, defaulting to empty animations", e);
+    anim = { animations: [] };
+  }
+
 
   console.log("FBX loaded", fbx);
 

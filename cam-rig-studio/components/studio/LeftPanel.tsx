@@ -231,7 +231,7 @@ export default function LeftPanel({ onGenerateMocap, syncTime, mocapReady, avata
 
       {/* ── HEADER ──────────────────────────────────────────────────────────── */}
       <div className="border border-cyan-500/30 bg-black/80 rounded-lg text-center py-3 font-bold mb-6 tracking-widest text-cyan-300 relative overflow-hidden">
-        <span className="relative z-10">MOCAP STUDIO //</span>
+        <span className="relative z-10">CAMRIG STUDIO</span>
         {/* subtle scanline shimmer */}
         <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_3px,rgba(0,255,255,0.03)_3px,rgba(0,255,255,0.03)_4px)] pointer-events-none" />
       </div>
