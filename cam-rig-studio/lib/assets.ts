@@ -1,8 +1,8 @@
   export const characters = [
     { name: "XBot", url: "/assets/char/XBot.fbx", thumb: "/assets/thums/char/xbot.png" },
     { name: "YBot", url: "/assets/char/Ybot.fbx", thumb: "/assets/thums/char/ybot.png" },
-    { name: "Archer", url: "/assets/char/Archer.fbx", thumb: "/assets/thums/char/Archer.png" },
-    { name: "Maria", url: "/assets/char/Maria.fbx", thumb: "/assets/thums/char/Maria.png" },
+    { name: "Archer", url: "/assets/char/Archer.fbx", thumb: "/assets/thums/char/archer.png" },
+    { name: "Maria", url: "/assets/char/Maria.fbx", thumb: "/assets/thums/char/maria.png" },
   ];
 
   export const animations = [
