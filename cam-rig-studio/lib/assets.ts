@@ -9,6 +9,7 @@
     { name: "Idle", url: "/assets/animation/Idle.fbx", thumb: "/assets/thums/anim/Idle.gif" },
     { name: "Walking", url: "/assets/animation/Walk.fbx", thumb: "/assets/thums/anim/Walking.gif" },
     { name: "Dancing", url: "/assets/animation/Dancing.fbx", thumb: "/assets/thums/anim/Dancing.gif" },
+    { name: "Jumping Down", url: "/assets/animation/JumpingDown.fbx", thumb: "/assets/thums/anim/JumpingDown.gif" },
   ];
 
   export const landVideos = [

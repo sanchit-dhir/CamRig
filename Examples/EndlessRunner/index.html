@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeonRun — 3D Endless Runner</title>
+  <meta name="description" content="A stunning 3D endless runner built with Three.js. Dodge obstacles, collect coins, survive as long as you can!" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Three.js Canvas -->
+  <div id="canvas-container"></div>
+
+  <!-- CRT scanlines aesthetic overlay -->
+  <div class="scanlines"></div>
+
+  <!-- ─── LOADING SCREEN ─── -->
+  <div class="screen" id="loading-screen">
+    <div class="loading-logo">
+      <h1>NEONRUN</h1>
+      <p class="tagline">Infinite · Neon · Speed</p>
+    </div>
+    <div class="loading-bar-wrap">
+      <div class="loading-bar" id="loading-bar"></div>
+    </div>
+    <p class="loading-status" id="loading-status">Initializing…</p>
+  </div>
+
+  <!-- ─── MAIN MENU ─── -->
+  <div class="screen hidden" id="menu-screen">
+    <div class="menu-title-wrap">
+      <h1>NEONRUN</h1>
+      <p class="sub">Endless · Runner · 3D</p>
+    </div>
+    <button class="menu-btn menu-btn-primary" id="btn-play">▶ &nbsp;Play</button>
+    <div class="high-score-display">
+      <div class="hs-label">Best Score</div>
+      <div class="hs-value" id="menu-hs">0</div>
+    </div>
+    <div class="controls-hint">
+      <div class="ctrl-item"><span class="ctrl-key">←→</span> Lane</div>
+      <div class="ctrl-item"><span class="ctrl-key">SPACE</span> Jump</div>
+      <div class="ctrl-item"><span class="ctrl-key">P</span> Pause</div>
+    </div>
+  </div>
+
+  <!-- ─── HUD ─── -->
+  <div id="hud">
+    <div class="hud-top">
+      <div class="score-panel">
+        <div class="score-label">Score</div>
+        <div class="score-value" id="hud-score">0</div>
+      </div>
+      <div class="coins-display">
+        <div class="coin-icon"></div>
+        <div class="coins-count" id="hud-coins">0</div>
+      </div>
+    </div>
+    <!-- Lane dots -->
+    <div class="lane-dots">
+      <div class="lane-dot active" id="lane-dot-0"></div>
+      <div class="lane-dot" id="lane-dot-1"></div>
+      <div class="lane-dot" id="lane-dot-2"></div>
+    </div>
+    <!-- Speed bar -->
+    <div class="speed-bar-wrap">
+      <div class="speed-label">Speed</div>
+      <div class="speed-bar">
+        <div class="speed-fill" id="speed-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PAUSE SCREEN ─── -->
+  <div class="screen hidden" id="pause-screen">
+    <div class="pause-title">PAUSED</div>
+    <button class="menu-btn menu-btn-primary" id="btn-resume">▶ &nbsp;Resume</button>
+    <button class="menu-btn menu-btn-secondary" id="btn-quit">← &nbsp;Main Menu</button>
+  </div>
+
+  <!-- ─── GAME OVER SCREEN ─── -->
+  <div class="screen hidden" id="gameover-screen">
+    <div class="gameover-title">GAME OVER</div>
+    <p class="gameover-sub">You've been terminated</p>
+    <div id="new-best-badge" class="new-best-badge hidden">⚡ New Best!</div>
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="label">Score</div>
+        <div class="value" id="go-score">0</div>
+      </div>
+      <div class="result-card best">
+        <div class="label">Best</div>
+        <div class="value" id="go-best">0</div>
+      </div>
+      <div class="result-card coins">
+        <div class="label">Coins</div>
+        <div class="value" id="go-coins">0</div>
+      </div>
+      <div class="result-card">
+        <div class="label">Distance</div>
+        <div class="value" id="go-dist">0m</div>
+      </div>
+    </div>
+    <button class="menu-btn menu-btn-primary" id="btn-restart">▶ &nbsp;Play Again</button>
+    <button class="menu-btn menu-btn-secondary" id="btn-menu">← &nbsp;Main Menu</button>
+  </div>
+
+  <!-- ─── TOUCH ZONES (mobile) ─── -->
+  <div id="touch-zones">
+    <div class="touch-zone" id="tz-left">
+      <span class="tz-indicator">← Left</span>
+    </div>
+    <div class="touch-zone" id="tz-mid">
+      <span class="tz-indicator">↑ Jump</span>
+    </div>
+    <div class="touch-zone" id="tz-right">
+      <span class="tz-indicator">Right →</span>
+    </div>
+  </div>
+
+  <!-- ─── THREE.JS + LOADERS (importmap) ─── -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three":                    "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+      "three/addons/":            "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
