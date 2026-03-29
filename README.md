@@ -42,3 +42,13 @@ npm start
 **UI:** Next Js, React, TailwindCSS, ThreeJs
 
 **Server:** Mediapipe, Kalidokit
+
+## 📦 Examples
+
+Explore projects built using CamRig Studio:
+
+- **Endless Runner Demo**  
+  👉 https://endless-runner-camrig.vercel.app/
+
+- **More Examples**  
+  Available inside the repository: `/Examples`
